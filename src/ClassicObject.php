@@ -1,9 +1,15 @@
 <?php
 
+/**
+ * Dynamic object data handler
+ *
+ * @author Jonas Sciangula <joni2back {at} gmail.com>
+ */
 class ClassicObject
 {
     protected $_data = array();
     protected $_origData = array();
+
     /**
      * @param array $data
      */
