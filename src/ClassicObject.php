@@ -1,5 +1,7 @@
 <?php
 
+namespace PHPClassic;
+
 /**
  * Dynamic object data handler
  *
@@ -31,7 +33,7 @@ class ClassicObject
     /**
      * @param string $key
      * @param mixed $value
-     * @return \ClassicObject
+     * @return PHPClassic\ClassicObject
      */
     public function set($key, $value)
     {
@@ -67,7 +69,7 @@ class ClassicObject
     /**
      * @param string|array $key
      * @param mixed $value
-     * @return \ClassicObject
+     * @return PHPClassic\ClassicObject
      */
     public function setData($key, $value = null)
     {
@@ -81,7 +83,7 @@ class ClassicObject
 
     /**
      * @param array $arr
-     * @return \ClassicObject
+     * @return PHPClassic\ClassicObject
      */
     public function addData(array $data)
     {
@@ -106,7 +108,7 @@ class ClassicObject
     /**
      * @param string $key
      * @param mixed $data
-     * @return \ClassicObject
+     * @return PHPClassic\ClassicObject
      */
     public function setOrigData($key = null, $data = null)
     {
@@ -120,7 +122,7 @@ class ClassicObject
 
     /**
      * @param string $key
-     * @return \ClassicObject
+     * @return PHPClassic\ClassicObject
      */
     public function unsetData($key = null)
     {
@@ -152,7 +154,7 @@ class ClassicObject
 
     /**
      * This method should be overriden to work with the database
-     * @return \ClassicObject
+     * @return PHPClassic\ClassicObject
      */
     public function save()
     {
@@ -161,7 +163,7 @@ class ClassicObject
     }
 
     /**
-     * @return \ClassicObject
+     * @return PHPClassic\ClassicObject
      */
     public function revert()
     {
@@ -172,7 +174,7 @@ class ClassicObject
     /**
      * @param string $method
      * @param array $params
-     * @return \ClassicObject
+     * @return PHPClassic\ClassicObject
      */
     public function __call($method, $params)
     {
