@@ -5,7 +5,7 @@ namespace PHPClassic;
 /**
  * Shell exec helper
  *
- * @author  Jonas Sciangula <jonas.sciangula@dattatec.com>
+ * @author  Jonas Sciangula <joni2back@gmail.com>
  */
 class ClassicShell
 {
