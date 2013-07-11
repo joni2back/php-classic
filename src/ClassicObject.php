@@ -3,7 +3,7 @@
 namespace PHPClassic;
 
 /**
- * Dynamic object data handler
+* Dynamic object data handler
  *
  * @author Jonas Sciangula <joni2back {at} gmail.com>
  */
@@ -13,11 +13,16 @@ class ClassicObject
     protected $_origData = array();
 
     /**
-     * @param array $data
+     * @param PHPClassic\ClassicObject|array $data
      */
-    public function __construct(array $data = array())
+    public function __construct($data = array())
     {
-        $this->_origData = $this->_data = $data;
+        if ($data instanceof self) {
+            $data = $data->getData();
+        }
+        if (is_array($data)) {
+            $this->_origData = $this->_data = $data;
+        }
     }
 
     /**
@@ -47,6 +52,7 @@ class ClassicObject
     public function uns($key)
     {
         unset($this->_data[$key]);
+        return $this;
     }
 
     /**
@@ -87,7 +93,7 @@ class ClassicObject
      */
     public function addData(array $data)
     {
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $this->setData($key, $value);
         }
         return $this;
@@ -172,6 +178,15 @@ class ClassicObject
     }
 
     /**
+     * @param string $key
+     * @return string
+     */
+    protected function _decamelize($key)
+    {
+        return strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $key));
+    }
+
+    /**
      * @param string $method
      * @param array $params
      * @return PHPClassic\ClassicObject
@@ -179,16 +194,19 @@ class ClassicObject
     public function __call($method, $params)
     {
         if (! preg_match('/^(get|set|has|uns)/', $method)) {
-            trigger_error("Call to undefined function {$method}", E_USER_ERROR);
+            $errorMsg = sprintf(
+                'Call to undefined function %s::%s()', __CLASS__, $method);
+            trigger_error($errorMsg, E_USER_ERROR);
         }
         $operation = substr($method, 0, 3);
         $key = $this->_decamelize(substr($method, 3));
+        $value = isset($params[0]) ? $params[0] : null;
         switch ($operation) {
             case 'get':
-                return $this->get($key);
+                return $this->get($key, $value);
                 break;
             case 'set':
-                return $this->set($key, $params[0]);
+                return $this->set($key, $value);
                 break;
             case 'has':
                 return $this->has($key);
@@ -200,12 +218,4 @@ class ClassicObject
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @return string
-     */
-    protected function _decamelize($key)
-    {
-        return strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $key));
-    }
 }
