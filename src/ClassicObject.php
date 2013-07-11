@@ -3,7 +3,7 @@
 namespace PHPClassic;
 
 /**
-* Dynamic object data handler
+ * Dynamic object data handler
  *
  * @author Jonas Sciangula <joni2back {at} gmail.com>
  */
