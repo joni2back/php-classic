@@ -103,12 +103,3 @@ class Output
     }
 
 }
-
-
-
-$cl = new ConsoleOutput();
-$cl->writeTitle('Welcome to the Ferozo3 Dispatcher Application!');
-$cl->writeTitle('Dispatcher');
-$cl->setColor('white', 'red', 'bold')->writeln("My\nname\nis\nDark");
-$cl->setColor('white', 'blue', 'bold')->writeln("My\nname\nis\nDark");
-$cl->restoreColor()->writeln('holsa');
