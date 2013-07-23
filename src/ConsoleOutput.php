@@ -5,7 +5,7 @@ namespace PHPClassic;
 /**
  * @todo Windows Shell Colors
  */
-class Output
+class ConsoleOutput
 {
     protected $_style;
     protected $_stream;
