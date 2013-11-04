@@ -12,13 +12,17 @@ class Curly
     protected $handler;
     protected $url;
     protected $response;
-    protected $responseHeaders = array();
+    protected $responseHeaders;
     protected $method = 'GET';
     protected $port = 80;
     protected $headers = array();
     protected $postParams = array();
     protected $getParams = array();
-    protected $followRedirects = true;
+    protected $followRedirect = true;
+    protected $options = array();
+    public static $allowedMethods = array(
+        'OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'CONNECT'
+    );
 
     /**
      * @param string $url
@@ -46,9 +50,9 @@ class Curly
     /**
      * @param bool $mode
      */
-    public function setFollowRedirects($mode)
+    public function setFollowRedirect($mode)
     {
-        $this->followRedirects = (bool) $mode;
+        $this->followRedirect = (bool) $mode;
     }
 
     /**
@@ -57,40 +61,9 @@ class Curly
      */
     public function setMethod($method)
     {
-        $allowedMethods = array('GET', 'POST', 'DELETE', 'PUT');
-        if (in_array($method, $allowedMethods)) {
-            $this->method = $method;
+        if (in_array(strtoupper($method), self::$allowedMethods)) {
+            $this->method = strtoupper($method);
         }
-        return $this;
-    }
-
-    /**
-     * @param array $params
-     * @return \PHPClassic\Curly
-     */
-    public function setGetParams(array $params)
-    {
-        $this->getParams = $params;
-        return $this;
-    }
-
-    /**
-     * @param array $params
-     * @return \PHPClassic\Curly
-     */
-    public function setPostParams(array $params)
-    {
-        $this->postParams = $params;
-        return $this;
-    }
-
-    /**
-     * @param array $headers
-     * @return \PHPClassic\Curly
-     */
-    public function setHeaders(array $headers)
-    {
-        $this->headers = $headers;
         return $this;
     }
 
@@ -105,22 +78,110 @@ class Curly
     }
 
     /**
+     * @param array $params
+     * @return \PHPClassic\Curly
+     */
+    public function setGetParams(array $params = array())
+    {
+        $this->getParams = $params;
+        return $this;
+    }
+
+    /**
+     * @param array $params
+     * @return \PHPClassic\Curly
+     */
+    public function setPostParams(array $params = array())
+    {
+        $this->postParams = $params;
+        return $this;
+    }
+
+    /**
+     * @param array $headers
+     * @return \PHPClassic\Curly
+     */
+    public function setHeaders(array $headers = array())
+    {
+        $this->headers = $headers;
+        return $this;
+    }
+
+    /**
+     * @param array $params
+     * @return \PHPClassic\Curly
+     */
+    public function addGetParams(array $params = array())
+    {
+        $this->getParams = array_merge($params, $this->getParams);
+        return $this;
+    }
+
+    /**
+     * @param array $params
+     * @return \PHPClassic\Curly
+     */
+    public function addPostParams(array $params = array())
+    {
+        $this->postParams = array_merge($params, $this->postParams);
+        return $this;
+    }
+
+    /**
+     * @param array $params
+     * @return \PHPClassic\Curly
+     */
+    public function addHeaders(array $headers = array())
+    {
+        $this->headers = array_merge($headers, $this->headers);
+        return $this;
+    }
+
+    /**
+     * @param string $user
+     * @param string $password
+     * @param int $authType
+     * @return \PHPClassic\Curly
+     */
+    public function setAuth($user, $password, $authType = CURLAUTH_BASIC)
+    {
+        $this->setOption(CURLOPT_HTTPAUTH, $authType);
+        $this->setOption(CURLOPT_USERPWD, sprintf('%s:%s', $user, $password));
+        return $this;
+    }
+
+    /**
      * @return \PHPClassic\Curly
      */
     protected function configure()
     {
-        $getParams = '?' . http_build_query($this->getParams);
+        $getParams = http_build_query($this->getParams);
         $postParams = http_build_query($this->postParams);
 
-        curl_setopt($this->handler, CURLOPT_URL, $this->url . $getParams);
-        curl_setopt($this->handler, CURLOPT_PORT, $this->port);
-        curl_setopt($this->handler, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($this->handler, CURLOPT_CUSTOMREQUEST, $this->method);
-        curl_setopt($this->handler, CURLOPT_POSTFIELDS, $postParams);
-        curl_setopt($this->handler, CURLOPT_FOLLOWLOCATION, $this->followRedirects);
-        curl_setopt($this->handler, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($this->handler, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->handler, CURLOPT_HEADER, true);
+        $this->setOption(CURLOPT_URL, sprintf('%s?%s', $this->url, $getParams));
+        $this->setOption(CURLOPT_PORT, $this->port);
+        $this->setOption(CURLOPT_HTTPHEADER, $this->headers);
+        $this->setOption(CURLOPT_CUSTOMREQUEST, $this->method);
+        $this->setOption(CURLOPT_POSTFIELDS, $postParams);
+        $this->setOption(CURLOPT_FOLLOWLOCATION, $this->followRedirect);
+        $this->setOption(CURLOPT_SSL_VERIFYPEER, true);
+        $this->setOption(CURLOPT_RETURNTRANSFER, true);
+        $this->setOption(CURLOPT_HEADER, true);
+
+        foreach ($this->options as $option => $value) {
+            curl_setopt($this->handler, $option, $value);
+        }
+        return $this;
+    }
+
+    /**
+     * @param int $option
+     * @param mixed $value
+     * @return \PHPClassic\Curly
+     */
+    public function setOption($option, $value)
+    {
+        $this->options[$option] = $value;
         return $this;
     }
 
