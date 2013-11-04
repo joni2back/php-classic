@@ -2,9 +2,6 @@
 
 namespace PHPClassic;
 
-/**
- * @todo Windows Shell Colors
- */
 class ConsoleOutput
 {
     protected $_style;

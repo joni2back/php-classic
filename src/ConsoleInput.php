@@ -1,10 +1,8 @@
 <?php
 
 namespace PHPClassic;
+use PHPClassic\ConsoleOutput;
 
-/**
- * @todo Windows Shell Colors
- */
 class ConsoleInput
 {
     protected $_required = true;
@@ -15,7 +13,7 @@ class ConsoleInput
     /**
      * @param PHPClassic\ConsoleOutput $outputIns
      */
-    public function __construct(Output $outputIns)
+    public function __construct(ConsoleOutput $outputIns)
     {
         $this->setInput(fopen('php://stdin', 'r'));
         $this->output = $outputIns;
