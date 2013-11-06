@@ -1,6 +1,6 @@
 <?php
 
-#namespace PHPClassic;
+namespace PHPClassic;
 
 /**
  * This class allows you to use generate dynamic classes such as stdClass
