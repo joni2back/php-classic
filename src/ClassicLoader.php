@@ -38,8 +38,8 @@ final class ClassicLoader
 
         foreach (self::getExts() as $ext) {
             foreach (self::getPaths() as $path) {
-                $filepath = sprintf('%s%s%s%s.%s',
-                    $path .self::DS, $classpath, self::DS, $classname, $ext
+                $filepath = sprintf('%s%s%s%s%s.%s',
+                    $path, self::DS, $classpath, self::DS, $classname, $ext
                 );
                 if (file_exists($filepath)) {
                     require_once $filepath;
