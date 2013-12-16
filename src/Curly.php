@@ -33,8 +33,8 @@ class Curly
         if (! function_exists('curl_init')) {
             throw new \ErrorException('Curl library is not enabled');
         }
+        $this->handler = curl_init();
         $this->setUrl($url);
-        $this->handler = curl_init($this->url);
     }
 
     /**
@@ -108,6 +108,19 @@ class Curly
     }
 
     /**
+     * @param array $files
+     * @return \PHPClassic\Curly
+     */
+    public function setFiles(array $files = array())
+    {
+        $files = array_map(function($file) {
+            return sprintf('@%s', realpath($file));
+        }, $files);
+        $this->setPostParams($files);
+        return $this;
+    }
+
+    /**
      * @param array $params
      * @return \PHPClassic\Curly
      */
@@ -138,6 +151,19 @@ class Curly
     }
 
     /**
+     * @param array $files
+     * @return \PHPClassic\Curly
+     */
+    public function addFiles(array $files = array())
+    {
+        $files = array_map(function($file) {
+            return sprintf('@%s', realpath($file));
+        }, $files);
+        $this->addPostParams($files);
+        return $this;
+    }
+
+    /**
      * @param string $user
      * @param string $password
      * @param int $authType
@@ -153,21 +179,28 @@ class Curly
     /**
      * @return \PHPClassic\Curly
      */
-    protected function configure()
+    protected function prepare()
     {
         $getParams = http_build_query($this->getParams);
-        $postParams = http_build_query($this->postParams);
+        //$postParams = http_build_query($this->postParams);
 
         $this->setOption(CURLOPT_URL, sprintf('%s?%s', $this->url, $getParams));
         $this->setOption(CURLOPT_PORT, $this->port);
         $this->setOption(CURLOPT_HTTPHEADER, $this->headers);
         $this->setOption(CURLOPT_CUSTOMREQUEST, $this->method);
-        $this->setOption(CURLOPT_POSTFIELDS, $postParams);
+        $this->setOption(CURLOPT_POSTFIELDS, $this->postParams);
         $this->setOption(CURLOPT_FOLLOWLOCATION, $this->followRedirect);
         $this->setOption(CURLOPT_SSL_VERIFYPEER, true);
         $this->setOption(CURLOPT_RETURNTRANSFER, true);
-        $this->setOption(CURLOPT_HEADER, true);
 
+        return $this;
+    }
+
+    /**
+     * @return \PHPClassic\Curly
+     */
+    protected function build()
+    {
         foreach ($this->options as $option => $value) {
             curl_setopt($this->handler, $option, $value);
         }
@@ -190,12 +223,49 @@ class Curly
      */
     public function execute()
     {
-        $this->configure();
+        $this->prepare();
+        $this->setOption(CURLOPT_HEADER, true);
+        $this->build();
+
         $response = curl_exec($this->handler);
         $headerSize = curl_getinfo($this->handler, CURLINFO_HEADER_SIZE);
+
+        curl_close($this->handler);
         $this->responseHeaders = substr($response, 0, $headerSize);
         $this->response = substr($response, $headerSize);
         return $this;
+    }
+
+    /**
+     * @param string $savePath
+     * @return \Panel\CommonBundle\Helper\Curly
+     */
+    public function download($savePath)
+    {
+        $this->prepare();
+        $this->build();
+        $response = curl_exec($this->handler);
+        curl_close($this->handler);
+        file_put_contents($savePath, $response);
+
+        return $this;
+    }
+
+    /**
+     * @param bool $toKBytes
+     * @return int
+     */
+    public function getSize($toKBytes = true)
+    {
+        $this->prepare();
+        $this->setOption(CURLOPT_HEADER, true);
+        $this->setOption(CURLOPT_NOBODY, true);
+        $this->build();
+        curl_exec($this->handler);
+        $size = curl_getinfo($this->handler, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+        curl_close($this->handler);
+
+        return $toKBytes ? round($size / 1024) : $size;
     }
 
     /**
@@ -212,6 +282,16 @@ class Curly
     public function getResponse()
     {
         return $this->response;
+    }
+
+    /**
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->handler = curl_init();
+        $this->setUrl($this->url);
+        $this->setPort($this->port);
     }
 
 }
