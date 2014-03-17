@@ -1,0 +1,23 @@
+{
+    "name": "joni2back/php-classic",
+    "type": "php-classic",
+    "description": "php-classic is a set of helper libraries for any PHP project",
+    "homepage": "https://github.com/joni2back/php-classic",
+    "license": [
+      "MIT",
+      "GPL-3.0"
+    ],
+    "authors": [
+        {
+            "name": "Jonas Sciangula Street",
+            "email": "joni2back@gmail.com",
+            "homepage": "http://www.joni2back.com.ar"
+        }
+    ],
+    "autoload": {
+        "psr-0" : {
+            "joni2back/php-classic" : "src"
+        }
+    }
+}
+
