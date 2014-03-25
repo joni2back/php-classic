@@ -40,7 +40,7 @@ abstract class Singletoner
         } elseif (is_object($className) || class_exists((string) $className)) {
             $instance = self::$_instances[$instanceName] = new $className;
         } else {
-            throw new LogicException("Class \"{$className}\" does not exist");
+            throw new \LogicException("Class \"{$className}\" does not exist");
         }
         return $instance;
     }

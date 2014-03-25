@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="./src/PHPClassic/Tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="PHPClassic Test Suite">
+            <directory>./Tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

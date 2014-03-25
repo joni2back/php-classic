@@ -12,9 +12,6 @@
         "psr-0": {
             "PHPClassic": "src/"
         }
-    }
-    "require": {
-
     },
     "minimum-stability": "dev"
 }
