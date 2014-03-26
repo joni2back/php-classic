@@ -2,7 +2,7 @@
 <phpunit colors="true" bootstrap="./src/PHPClassic/Tests/bootstrap.php">
     <testsuites>
         <testsuite name="PHPClassic Test Suite">
-            <directory>./Tests/</directory>
+            <directory>./src/PHPClassic/Tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
