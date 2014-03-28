@@ -66,14 +66,6 @@ class Shell
     }
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return __CLASS__;
-    }
-
-    /**
      * @return bool
      */
     public function isSuccessful()
