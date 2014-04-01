@@ -8,6 +8,7 @@ namespace PHPClassic;
  *
  * @author Jonas Sciangula Street <joni2back {at} gmail.com>
  * @todo Workaround to allow objects as parameter
+ * @todo Support namespaces
  *
  * @usage
  *     $crazyClass = InstanceBuilder::build('CrazyClass');
