@@ -10,7 +10,7 @@ class ClassicLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testAddPath()
     {
-        $path = dirname(dirname(__DIR__));
+        $path = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..');
         ClassicLoader::addPath($path);
         $this->assertTrue(in_array($path, ClassicLoader::getPaths()));
     }

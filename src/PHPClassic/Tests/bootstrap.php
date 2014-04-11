@@ -1,7 +1,7 @@
 <?php
-require_once dirname(__FILE__) . '/../ClassicLoader.php';
+require_once __DIR__ . '/../ClassicLoader.php';
 
 $loader = new \PHPClassic\ClassicLoader;
-$loader::addPath(dirname(__FILE__) . '/../..');
+$loader::addPath(__DIR__ . '/../..');
 
 spl_autoload_register(array($loader, 'autoLoad'));

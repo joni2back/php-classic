@@ -9,11 +9,6 @@ class SingletonerTest extends \PHPUnit_Framework_TestCase
     const FIND_KEY_1 = 'walter';
     const FIND_KEY_2 = 'white';
 
-    protected function setUp()
-    {
-
-    }
-
     function testSetInstance()
     {
         $instance = new \stdClass();
