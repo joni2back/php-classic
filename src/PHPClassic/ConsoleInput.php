@@ -10,6 +10,8 @@ class ConsoleInput
     protected $_validationMsg = '';
     protected $_stream;
 
+    const PROMPT_COLOR = 'yellow';
+
     /**
      * @param PHPClassic\ConsoleOutput $outputIns
      */
@@ -33,18 +35,18 @@ class ConsoleInput
 
         while (true) {
             $this->writePrompt($msg);
-            $input = fgets($this->_stream);
+            $input = trim(fgets($this->_stream));
             if ($input && $this->_validation &&
                 ! preg_match($this->_validation, $input)) {
                 $this->writeAlert($this->_validationMsg);
                 $input = null;
                 continue;
             }
+            if (! $input && $default) {
+                $input = $default;
+            }
             if (! $input && $this->_required) {
                 continue;
-            }
-            if (! $input) {
-                $input = $default;
             }
             break;
         }
@@ -110,7 +112,8 @@ class ConsoleInput
      */
     protected function writePrompt($message, $color = 'yellow')
     {
-        $this->getOutput()->setColor($color)->write($message)->restoreColor();
+        $this->getOutput()->setColor($color, null, 'bold')
+            ->write($message)->restoreColor();
         return $this;
     }
 
