@@ -74,14 +74,17 @@ class Shell
     }
 
     /**
-     * @param  string $pattern
-     * @param  bool $ignore
+     * @param  string $regex
+     * @param  bool $exclude
      * @return PHPClassic\ClassicShell
      */
-    public function grep($pattern, $ignore = false)
+    public function grep($regex, $exclude = false)
     {
-        $result = preg_grep($pattern, $this->_output);
-        $this->_output = $ignore ?
+        if (@preg_match($regex, '') === false) {
+            $regex = sprintf("/%s/", preg_quote($regex));
+        }
+        $result = (array) preg_grep($regex, $this->_output);
+        $this->_output = $exclude ?
             array_values(array_diff($this->_output, $result)) : $result;
         return $this;
     }
