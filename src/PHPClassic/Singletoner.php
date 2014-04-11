@@ -9,10 +9,9 @@ namespace PHPClassic;
  * @link http://www.joni2back.com.ar/programacion/singleton-multiples-instancias
  * @author Jonas Sciangula Street <joni2back {at} gmail.com>
  *
- * @usage 1) Singletoner::getInstance('stdClass'); //Get by proper class name
- * @usage 2) Singletoner::getInstance('Main_Dto', 'stdClass'); //Get by ins name
- * @usage 3) Singletoner::setInstance('Main_Dto', 'stdClass'); //Set instance
- * @usage 3) Singletoner::getInstance('Main_Dto'); //Get predefined instance
+ * @usage
+ *    Singletoner::setInstance('Main_Dto', new \stdClass);
+ *    Singletoner::getInstance('Main_Dto');
  */
 abstract class Singletoner
 {
@@ -28,19 +27,21 @@ abstract class Singletoner
      * Setup the instance with own name
      *
      * @param string $instanceName
-     * @param string|object $className
+     * @param string|object $class
      * @return object
      * @throws LogicException
      */
-    public static function setInstance($instanceName, $className)
+    public static function setInstance($instanceName, $class)
     {
         $instance = null;
         if (isset(self::$_instances[$instanceName])) {
             $instance = self::$_instances[$instanceName];
-        } elseif (is_object($className) || class_exists((string) $className)) {
-            $instance = self::$_instances[$instanceName] = new $className;
+        } elseif (is_object($class)) {
+            $instance = self::$_instances[$instanceName] = $class;
+        } elseif (is_string($class) && class_exists($class)) {
+            $instance = self::$_instances[$instanceName] = new $class;
         } else {
-            throw new \LogicException("Class \"{$className}\" does not exist");
+            throw new \LogicException("Class \"{$class}\" does not exist");
         }
         return $instance;
     }
@@ -51,19 +52,12 @@ abstract class Singletoner
      * @param string $instanceName
      * @return object
      */
-    public static function getInstance($instanceName, $className = null)
+    public static function getInstance($instanceName)
     {
-        if ($instanceName && $className) {
-            return self::setInstance($instanceName, $instanceName);
-        }
-
-        $instance = null;
         if (isset(self::$_instances[$instanceName])) {
-            $instance = self::$_instances[$instanceName];
-        } else {
-            $instance = self::setInstance($instanceName, $instanceName);
+            return self::$_instances[$instanceName];
         }
-        return $instance;
+        throw new \LogicException("Instance \"{$instanceName}\" does not exist");
     }
 
     /**
@@ -75,21 +69,6 @@ abstract class Singletoner
     {
         if (isset(self::$_instances[$instanceName])) {
             unset(self::$_instances[$instanceName]);
-        }
-    }
-
-    /**
-     * Renew the instance
-     *
-     * @param string $instanceName
-     * @return object
-     */
-    public static function flushInstance($instanceName)
-    {
-        if (isset(self::$_instances[$instanceName])) {
-            $className = get_class(self::$_instances[$instanceName]);
-            self::unsInstance($instanceName);
-            return self::getInstance($instanceName, $className);
         }
     }
 
