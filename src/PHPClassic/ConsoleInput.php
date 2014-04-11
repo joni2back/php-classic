@@ -33,7 +33,7 @@ class ConsoleInput
 
         while (true) {
             $this->writePrompt($msg);
-            fscanf($this->_stream, "%s", $input);
+            $input = fgets($this->_stream);
             if ($input && $this->_validation &&
                 ! preg_match($this->_validation, $input)) {
                 $this->writeAlert($this->_validationMsg);
