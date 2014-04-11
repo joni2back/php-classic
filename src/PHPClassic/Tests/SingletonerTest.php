@@ -11,45 +11,50 @@ class SingletonerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $ins = Singletoner::getInstance('StdClass');
-        $ins->name = self::FIND_KEY_1;
 
-        $insCusName = Singletoner::setInstance('stdClassCusName', 'StdClass');
-        $insCusName->name = self::FIND_KEY_2;
-    }
-
-    public function testGetInstance()
-    {
-        $sameIns = Singletoner::getInstance('StdClass');
-        $this->assertEquals($sameIns->name, self::FIND_KEY_1);
     }
 
     function testSetInstance()
     {
-        $sameIns = Singletoner::getInstance('stdClassCusName');
-        $this->assertEquals($sameIns->name, self::FIND_KEY_2);
+        $instance = new \stdClass();
+        $instance->name = self::FIND_KEY_1;
+        $singletoned = Singletoner::setInstance('stdClassCusName', $instance);
+
+        $this->assertEquals($singletoned->name, self::FIND_KEY_1);
+
+        try {
+            Singletoner::setInstance('unknownSingleton', 'Unknown');
+            $this->fail("Expected exception not thrown");
+        } catch (\Exception $oExp) {
+            $this->assertEquals("Class \"Unknown\" does not exist", $oExp->getMessage());
+        }
     }
 
-    public function testFlushInstance()
+    public function testGetInstance()
     {
-        $ins = Singletoner::getInstance('ArrayObject');
-        $ins->append('val1');
-        $ins->append('val2');
+        $instance = new \stdClass();
+        $instance->name = self::FIND_KEY_2;
+        Singletoner::setInstance('stdClassCusName2', $instance);
+        $singletoned = Singletoner::getInstance('stdClassCusName2');
+        $this->assertEquals($singletoned->name, self::FIND_KEY_2);
 
-        Singletoner::flushInstance('ArrayObject');
-        $returnIns = Singletoner::getInstance('ArrayObject');
-
-        $this->assertEquals($ins->count(), 2);
-        $this->assertEquals($returnIns->count(), 0);
+        try {
+            Singletoner::getInstance('UnknownInstance');
+            $this->fail("Expected exception not thrown");
+        } catch (\Exception $oExp) {
+            $this->assertEquals("Instance \"UnknownInstance\" does not exist", $oExp->getMessage());
+        }
     }
-
 
     public function testUnsInstance()
     {
-        $sameIns = Singletoner::getInstance('StdClass');
-        Singletoner::unsInstance('StdClass');
-        $returnIns = Singletoner::getInstance('StdClass');
-
-        $this->assertNotEquals($sameIns, $returnIns);
+        try {
+            Singletoner::setInstance('stdClassCusName3', new \stdClass());
+            Singletoner::unsInstance('stdClassCusName3');
+            Singletoner::getInstance('stdClassCusName3');
+            $this->fail("Expected exception not thrown");
+        } catch (\Exception $oExp) {
+            $this->assertEquals("Instance \"stdClassCusName3\" does not exist", $oExp->getMessage());
+        }
     }
 }
