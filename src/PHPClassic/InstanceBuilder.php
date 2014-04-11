@@ -23,6 +23,14 @@ namespace PHPClassic;
 
 abstract class InstanceBuilder
 {
+
+    /**
+     * Initiator, build a basic instance with custom name
+     *
+     * @param type $className
+     * @param array $attrs
+     * @return \PHPClassic\className
+     */
     public static function build($className, array $attrs = array())
     {
         $attrsString = '';
@@ -44,6 +52,10 @@ abstract class InstanceBuilder
         return new $className;
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     protected static function validateName($name)
     {
         return preg_match('/^[a-zA-Z\_]{1}+([\_a-zA-Z0-9]+)*$/', $name);
