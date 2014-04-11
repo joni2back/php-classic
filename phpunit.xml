@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" bootstrap="./src/PHPClassic/Tests/bootstrap.php">
+<phpunit colors="true" bootstrap="./src/autoloader.php">
     <testsuites>
         <testsuite name="PHPClassic Test Suite">
             <directory>./src/PHPClassic/Tests/</directory>
