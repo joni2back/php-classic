@@ -78,22 +78,22 @@ class ConsoleOutput
         return $this;
     }
 
-    public function writeLn($line)
+    public function writeLn($line = null)
     {
         return $this->write($line . "\r\n");
     }
 
     public function writeTitle($title, $foreground = 'white',
-        $background = 'black', $options = 'bold')
+        $background = null, $options = 'bold')
     {
         $prevStl = $this->_style;
         $this->setColor($foreground, $background, $options);
 
-        $title = sprintf('**   %s   **', $title);
+        $title = sprintf('***   %s   ***', $title);
         $chars = str_repeat('*', strlen($title));
 
         $this->writeln($chars)->writeln($title);
-        $this->writeln($chars)->writeln(null);
+        $this->writeln($chars);
 
         $this->_style = $prevStl;
         return $this;
