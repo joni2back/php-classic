@@ -51,11 +51,17 @@ final class ClassicLoader
 
     /**
      * @todo Possible bug with the currently dir path
-     * @param string$path
+     * @param mixed $path
      */
     public static function addPath($path)
     {
-        ! is_dir($path) ?: self::$paths[] = $path;
+        if (is_array($path)) {
+            foreach ($path as $pathstr) {
+                self::addPath($pathstr);
+            }
+        } elseif (is_string($path)) {
+            ! is_dir($path) ?: self::$paths[] = realpath($path);
+        }
     }
 
     /**
@@ -71,7 +77,13 @@ final class ClassicLoader
      */
     public static function addExt($ext)
     {
-        self::$exts[] = $ext;
+        if (is_array($ext)) {
+            foreach ($ext as $extstr) {
+                self::addExt($extstr);
+            }
+        } elseif (is_scalar($ext)) {
+            self::$exts[] = $ext;
+        }
     }
 
     /**
