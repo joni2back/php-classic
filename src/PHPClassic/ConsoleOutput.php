@@ -71,7 +71,7 @@ class ConsoleOutput
 
     public function write($line)
     {
-        if (posix_isatty(\STDOUT) && $this->_style) {
+        if (defined('\STDOUT') && posix_isatty(\STDOUT) && $this->_style) {
             $line = sprintf("\033[%sm%s\033[0m", $this->_style, $line);
         }
         fwrite($this->_stream, $line);
