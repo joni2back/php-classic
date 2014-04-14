@@ -2,8 +2,13 @@
 
 require_once __DIR__ . '/../src/autoloader.php';
 
-$output = new PHPClassic\ConsoleOutput;
-$input = new PHPClassic\ConsoleInput($output);
+if (defined('\PHP_SAPI') && \PHP_SAPI != 'cli') {
+    echo 'You must run this in your console: <b>php ' .  __FILE__ . '</b>';
+    exit(1);
+}
+
+$output = new \PHPClassic\ConsoleOutput;
+$input = new \PHPClassic\ConsoleInput($output);
 
 $name = $input->validate('/^[a-z]{2,32}.+$/i', 'Enter a valid name')->prompt('What is your name?');
 
