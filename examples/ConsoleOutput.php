@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../src/autoloader.php';
 
-$output = new PHPClassic\ConsoleOutput;
+$output = new \PHPClassic\ConsoleOutput;
 
 $output->writeTitle('ConsoleOuput example');
 $output->writeLn();
