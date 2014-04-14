@@ -62,7 +62,7 @@ class Shell
      */
     public function getTotalLines()
     {
-        return count($this->getOutput());
+        return count($this->_output);
     }
 
     /**
