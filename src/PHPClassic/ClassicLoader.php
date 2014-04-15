@@ -14,9 +14,9 @@ namespace PHPClassic;
  * @usage
  *      <?php
  *      //Application core, low level config file, etc
- *      spl_autoload_register(array(new ClassicLoader, 'autoLoad'));
  *      ClassicLoader::addPath('/usr/local/zend/share/ZendFramework2/library');
  *      ClassicLoader::addExt('php5');
+ *      ClassicLoader::register();
  */
 
 final class ClassicLoader
@@ -27,9 +27,9 @@ final class ClassicLoader
 
     /**
      * @param string $class
-     * @return null
+     * @return void
      */
-    public function autoLoad($class)
+    public static function autoLoad($class)
     {
         $paths = explode('\\', $class);
         $classname = end($paths);
@@ -50,7 +50,33 @@ final class ClassicLoader
     }
 
     /**
-     * @todo Possible bug with the currently dir path
+     * @param type $prepend
+     * @return void
+     */
+    public static function register()
+    {
+        spl_autoload_register(array(__CLASS__, 'autoLoad'));
+    }
+
+    /**
+     * @return void
+     */
+    public function unregister()
+    {
+        spl_autoload_unregister(array(__CLASS__, 'autoLoad'));
+    }
+
+    /**
+     * @return void
+     */
+    public static function reset()
+    {
+        static::$paths = array(__DIR__);
+        static::$exts = array('php');
+    }
+
+    /**
+     * @return void
      * @param mixed $path
      */
     public static function addPath($path)
@@ -74,6 +100,7 @@ final class ClassicLoader
 
     /**
      * @param string $ext
+     * @return void
      */
     public static function addExt($ext)
     {
