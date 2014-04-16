@@ -2,24 +2,24 @@
 
 require_once __DIR__ . '/../src/autoloader.php';
 
-use PHPClassic\Catcher;
-use PHPClassic\CatcherException;
+use PHPClassic\ErrorCatcher;
+use PHPClassic\ErrorCatcherException;
 
-Catcher::register();
+ErrorCatcher::register();
 
 try {
     echo $undefinedVar;
-} catch(CatcherException $oExp) {
+} catch(ErrorCatcherException $oExp) {
     printf("Caught %s with message: <b>%s</b><br />\n", $oExp->getName(), $oExp->getMessage());
 }
 
 try {
     trigger_error('Trigger error example', E_USER_DEPRECATED);
-} catch(CatcherException $oExp) {
+} catch(ErrorCatcherException $oExp) {
     printf("Caught %s with message: <b>%s</b><br />\n", $oExp->getName(), $oExp->getMessage());
 }
 
-Catcher::onFatal(function($oExp) {
+ErrorCatcher::onFatal(function($oExp) {
     printf("Caught FATAL:%s with message: <b>%s</b><br />\n", $oExp->getName(), $oExp->getMessage());
 });
 

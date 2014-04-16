@@ -2,7 +2,7 @@
 
 namespace PHPClassic;
 
-class CatcherException extends \ErrorException
+class ErrorCatcherException extends \ErrorException
 {
     /**
      * @var string

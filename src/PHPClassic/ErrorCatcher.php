@@ -1,9 +1,18 @@
 <?php
 
 namespace PHPClassic;
-use PHPClassic\CatcherException;
 
-class Catcher
+use PHPClassic\ErrorCatcherException;
+
+/**
+ * This class allows you to use override default php exception handler
+ *
+ * @author Jonas Sciangula Street <joni2back {at} gmail.com>
+ * @todo Method to set view template and remove html code from draw() method
+ * @todo Avoid the use of highlight_string() to make php syntax highlight
+ */
+
+class ErrorCatcher
 {
     /**
      * @var \Closure
@@ -20,7 +29,7 @@ class Catcher
      * @param string $errstr
      * @param string $errfile
      * @param int $errline
-     * @throws CatcherException
+     * @throws ErrorCatcherException
      */
     public static function handle($errno, $errstr, $errfile, $errline)
     {
@@ -33,11 +42,11 @@ class Catcher
      * @param int $code
      * @param string $filename
      * @param int $lineno
-     * @return \PHPClassic\CatcherException
+     * @return \PHPClassic\ErrorCatcherException
      */
     protected static function buildException($message, $code, $filename, $lineno)
     {
-        return new CatcherException($message, $code, 0, $filename, $lineno);
+        return new ErrorCatcherException($message, $code, 0, $filename, $lineno);
     }
 
     /**
