@@ -28,14 +28,16 @@ abstract class Singletoner
      *
      * @param string $instanceName
      * @param string|object $class
+     * @param bool $rewrite
      * @return object
      * @throws LogicException
+     * @throws ErrorException
      */
-    public static function setInstance($instanceName, $class)
+    public static function setInstance($instanceName, $class, $rewrite = false)
     {
         $instance = null;
-        if (isset(self::$_instances[$instanceName])) {
-            $instance = self::$_instances[$instanceName];
+        if (isset(self::$_instances[$instanceName]) && !$rewrite) {
+            throw new \ErrorException("Instance \"{$instanceName}\" already defined");
         } elseif (is_object($class)) {
             $instance = self::$_instances[$instanceName] = $class;
         } elseif (is_string($class) && class_exists($class)) {
