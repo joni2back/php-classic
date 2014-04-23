@@ -28,34 +28,70 @@ abstract class InstanceBuilder
      *
      * @param type $className
      * @param array $attrs
+     * @param bool $createGetters
      * @return object
      */
-    public static function build($className, array $attrs = array(), $namespace = null)
+    public static function build($className, array $attrs = array(), $namespace = null, $createGetters = true)
     {
         $attrsString = '';
-        if (! self::validateName($className)) {
+        $methdString = '';
+        if (! static::validateName($className)) {
             return;
         }
         foreach ($attrs as $attr => $val) {
             if (is_object($attr) || is_object($val)) {
                 continue;
             }
-            if (! self::validateName($attr)) {
+            if (! static::validateName($attr)) {
+                if (! static::validateName($val)) {
+                    continue;
+                }
                 $attr = $val;
                 $val = null;
             }
-            $attrsString .= sprintf("public $%s = %s;\n", $attr, var_export($val, true));
+            $attrsString .= static::buildProperty($attr, $val);
+            if ($createGetters) {
+                $methdString .= static::buildGetter($attr);
+                $methdString .= static::buildSetter($attr);
+            }
         }
-        $evalString = sprintf("class %s { %s }", $className, $attrsString);
+        $evalString = sprintf("class %s {\n%s\n%s\n}", $className, $attrsString, $methdString);
 
         $namespace = preg_replace('/^\\\/', '', $namespace);
-        if (self::validateNamespace($namespace)) {
+        if (static::validateNamespace($namespace)) {
             $evalString = sprintf("namespace %s;\n%s", $namespace, $evalString);
             $className = sprintf("%s\%s", $namespace, $className);
         }
-
         eval($evalString);
         return new $className;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return string
+     */
+    protected static function buildProperty($name, $value)
+    {
+        return sprintf("public $%s=%s;\n", $name, var_export($value, true));
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    protected static function buildGetter($name)
+    {
+        return sprintf("function get%s() {return \$this->%s;}\n", ucfirst($name), $name);
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    protected static function buildSetter($name)
+    {
+        return sprintf("function set%s(\$val) {\$this->%s=\$val; return \$this;}\n", ucfirst($name), $name);
     }
 
     /**
@@ -75,7 +111,7 @@ abstract class InstanceBuilder
     {
         $path = explode('\\', $name);
         foreach ($path as $part) {
-            if (! self::validateName($part)) {
+            if (! static::validateName($part)) {
                 return false;
             }
         }
