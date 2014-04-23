@@ -9,5 +9,5 @@ php:
   - hhvm
 
 script: 
-  - phpunit --configuration phpunit.xml --coverage-text
   - find . -name "*.php" -exec php -l {} \;
+  - phpunit --configuration phpunit.xml --coverage-text
