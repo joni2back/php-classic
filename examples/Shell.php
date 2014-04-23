@@ -10,7 +10,7 @@ $params = array(__DIR__, '-la');
 $shell->execute($command, $params)
 ?>
 
-<style>pre {background:#eee;padding:5px;max-width:50em}</style>
+<style>pre {background:#eee;padding:5px;max-width:50em; margin-top:-20px}</style>
 <h4>Command response</h4>
 
 <h5>Command</h5>

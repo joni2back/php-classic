@@ -31,7 +31,7 @@ if (isset($obj->questions) && is_array($obj->questions)) {
 
 ?>
 
-<style>pre {background:#eee;padding:5px;max-width:50em}</style>
+<style>pre {background:#eee;padding:5px;max-width:50em; margin-top:-20px}</style>
 <h4>Latest questions on StackOverflow</h4>
 
 <h5>Request Uri</h5>
