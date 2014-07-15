@@ -204,16 +204,12 @@ class Object
         switch ($operation) {
             case 'get':
                 return $this->get($key, $value);
-                break;
             case 'set':
                 return $this->set($key, $value);
-                break;
             case 'has':
                 return $this->has($key);
-                break;
             case 'uns':
                 return $this->uns($key);
-                break;
         }
         return $this;
     }
