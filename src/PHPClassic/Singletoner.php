@@ -35,17 +35,14 @@ abstract class Singletoner
      */
     public static function setInstance($instanceName, $class, $rewrite = false)
     {
-        $instance = null;
         if (isset(self::$_instances[$instanceName]) && !$rewrite) {
             throw new \ErrorException("Instance \"{$instanceName}\" already defined");
         } elseif (is_object($class)) {
-            $instance = self::$_instances[$instanceName] = $class;
+            return self::$_instances[$instanceName] = $class;
         } elseif (is_string($class) && class_exists($class)) {
-            $instance = self::$_instances[$instanceName] = new $class;
-        } else {
-            throw new \LogicException("Class \"{$class}\" does not exist");
-        }
-        return $instance;
+            return self::$_instances[$instanceName] = new $class;
+        } 
+        throw new \LogicException("Class \"{$class}\" does not exist");
     }
 
     /**
