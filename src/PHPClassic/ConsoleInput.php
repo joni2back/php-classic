@@ -9,7 +9,8 @@ class ConsoleInput
     protected $_validation = '';
     protected $_validationMsg = '';
     protected $_stream;
-
+    public $output;
+    
     const PROMPT_COLOR = 'yellow';
 
     /**
