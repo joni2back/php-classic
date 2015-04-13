@@ -10,4 +10,4 @@ php:
 
 script: 
   - find . -name "*.php" -exec php -l {} \;
-  - phpunit --configuration phpunit.xml --coverage-text
+  - phpunit --configuration phpunit.xml --coverage-text 
