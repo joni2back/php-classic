@@ -690,15 +690,15 @@ class Ftp
             }
         };
         try {
-            return $this->deleteFile($path);
+            $result = $this->deleteFile($path);
+            if ($result) {
+                return $result;
+            }
         } catch (\Exception $oExp) {
             $validateDenied($oExp);
-            try {
-                return $this->deleteDir($path);
-            } catch (\Exception $oExp) {
-                $validateDenied($oExp);
-            }
         }
+
+        return $this->deleteDir($path);
     }
 
     /**
