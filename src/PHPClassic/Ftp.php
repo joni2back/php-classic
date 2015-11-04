@@ -665,7 +665,7 @@ class Ftp
      */
     protected function _buildFileLinux($ftpLine)
     {
-        $chunks = preg_split("/\s+/", $ftpLine);
+        $chunks = preg_split("/ +/", $ftpLine);
             @list(
                 $item['rights'], $item['number'], $item['user'], $item['group'],
                 $item['size'], $item['month'], $item['day'], $item['time']
